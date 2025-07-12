@@ -1,0 +1,24 @@
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 24px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-field {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.form-field input,
+.form-field select {
+  padding: 8px;
+  font-size: 16px;
+}

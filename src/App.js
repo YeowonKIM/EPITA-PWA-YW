@@ -6,6 +6,7 @@ import MovieDetailsPage from "./pages/MovieDetailsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PublicRoute from "./routes/PublicRoute"
 import PrivateRoute from "./routes/PrivateRoute"
+import FormPage from "./pages/FormPage"; 
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         </Route>
         <Route element={<PrivateRoute />}>
           <Route path="/home" element={<HomePage />} />
+          <Route path="/form" element={<FormPage />} />
         </Route>
         <Route element={<PrivateRoute />}>
           <Route path="/movie/:movieId" element={<MovieDetailsPage />} />
