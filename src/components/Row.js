@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import "../styles/Row.css";
 import movieTrailer from "movie-trailer";
 import { useNavigate } from "react-router-dom";
 import YouTube from "react-youtube";
+
+import SkeletonMovieRow from "./SkeletonMovieRow";
 
 const opts = {
   height: "400",
@@ -16,16 +19,21 @@ const Row = ({ movies, title, isLarge }) => {
   const [movie, setMovie] = useState({});
   const [trailerUrl, setTrailerUrl] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
-  // setup page navigation
+  useEffect(() => {
+    // movies prop이 바뀌면 로딩 다시 시작
+    setIsLoading(true);
+    if (movies && movies.length > 0) {
+      setTimeout(() => setIsLoading(false), 1000);
+      setIsLoading(false);
+    }
+  }, [movies]);
 
   const handlePlayClick = (event) => {
     event.preventDefault();
-
-    // here we should the call seen movies
-
     if (trailerUrl) {
       setTrailerUrl("");
     } else {
@@ -40,24 +48,25 @@ const Row = ({ movies, title, isLarge }) => {
 
   const handleViewClick = (event) => {
     event.preventDefault();
-    navigate(`/movie/${movie.movie_id}`, {state: {movie}});
+    navigate(`/movie/${movie.movie_id}`, { state: { movie } });
   };
 
   const handleMovieClick = (event, movie) => {
     event.preventDefault();
     setMovie(movie);
-
     if (trailerUrl) {
       setTrailerUrl("");
     }
-    setShowModal(!showModal)
+    setShowModal(!showModal);
   };
 
   return (
     <div className="row">
       <h2>{title}</h2>
       <div className="row_posters">
-        {movies === undefined || movies.length === 0 ? (
+        {isLoading ? (
+          <SkeletonMovieRow isLarge={isLarge} /> 
+        ) : movies?.length === 0 ? (
           <span>No Movies Found</span>
         ) : (
           movies.map((movie) => (
@@ -71,11 +80,15 @@ const Row = ({ movies, title, isLarge }) => {
           ))
         )}
       </div>
-      {trailerUrl && <YouTube videoId={trailerUrl} opts={opts}/>}
+      {trailerUrl && <YouTube videoId={trailerUrl} opts={opts} />}
       {showModal && (
         <div className="movie_options">
-            <button className="movie_button" onClick={(event) => handlePlayClick(event)}>Play</button>
-            <button className="movie_button" onClick={(event) => handleViewClick(event)}>View</button>
+          <button className="movie_button" onClick={handlePlayClick}>
+            Play
+          </button>
+          <button className="movie_button" onClick={handleViewClick}>
+            View
+          </button>
         </div>
       )}
     </div>

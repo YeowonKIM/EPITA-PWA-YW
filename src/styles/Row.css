@@ -53,3 +53,29 @@
   background-color: #080e0e;
   transition: all 0.2s;
 }
+
+.skeleton_poster {
+  background-color: #333;
+  height: 120px;
+  width: 100px;
+  border-radius: 4px;
+  margin-right: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton_large {
+  height: 180px;
+  width: 120px;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

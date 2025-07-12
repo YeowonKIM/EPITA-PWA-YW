@@ -14,28 +14,31 @@ const opts = {
   },
 };
 
-const Banner = ({selectedMovie}) => {
+const Banner = ({ selectedMovie }) => {
   const { user } = useAppStateContext();
 
-  const [movie, setMovie] = useState(selectedMovie ? selectedMovie : {
-    title: "",
-    release_date: "",
-    backdrop_poster: "",
-    overview: "",
-  });
+  const [movie, setMovie] = useState(
+    selectedMovie
+      ? selectedMovie
+      : {
+          title: "",
+          release_date: "",
+          backdrop_poster: "",
+          overview: "",
+        }
+  );
   const [trailerUrl, setTrailerUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const request = await movieApi.get(
-          movieRequests.fetchNetflixOriginals,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
-        );
+        setIsLoading(true); 
+        const request = await movieApi.get(movieRequests.fetchNetflixOriginals, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
         setMovie(
           request.data.movies[
             Math.floor(Math.random() * (request.data.movies.length - 1))
@@ -43,11 +46,15 @@ const Banner = ({selectedMovie}) => {
         );
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false); 
       }
     };
 
-    if(!selectedMovie){
+    if (!selectedMovie) {
       fetchData();
+    } else {
+      setIsLoading(false); 
     }
   }, [selectedMovie, user?.token]);
 
@@ -57,18 +64,33 @@ const Banner = ({selectedMovie}) => {
 
   const handlePlayClick = (event) => {
     event.preventDefault();
-
-    // here we should the call seen movies
-
     if (trailerUrl) {
       setTrailerUrl("");
     } else {
-      movieTrailer(movie.title || "").then((url) => {
-        const urlParams = new URLSearchParams(new URL(url).search);
-        setTrailerUrl(urlParams.get("v"))
-      }).catch((error) => console.log(error));
+      movieTrailer(movie.title || "")
+        .then((url) => {
+          const urlParams = new URLSearchParams(new URL(url).search);
+          setTrailerUrl(urlParams.get("v"));
+        })
+        .catch((error) => console.log(error));
     }
   };
+
+  if (isLoading) {
+    return (
+      <header className="banner banner--loading">
+        <div className="banner_contents">
+          <div className="skeleton skeleton-title" />
+          <div className="banner_buttons">
+            <div className="skeleton skeleton-button" />
+            <div className="skeleton skeleton-button" />
+          </div>
+          <div className="skeleton skeleton-text" />
+          <div className="skeleton skeleton-text" />
+        </div>
+      </header>
+    );
+  }
 
   return (
     <div>
@@ -83,26 +105,22 @@ const Banner = ({selectedMovie}) => {
         <div className="banner_contents">
           <h1 className="banner_title">{movie.title}</h1>
           <div className="banner_buttons">
-            <button
-              className="banner_button"
-              onClick={(event) => handlePlayClick(event)}
-            >
+            <button className="banner_button" onClick={handlePlayClick}>
               Play
             </button>
             <button className="banner_button">My List</button>
             <span className="banner_release_date">
               {movie.release_date
-                ? new Date(movie?.release_date).toISOString().split("T")[0]
+                ? new Date(movie.release_date).toISOString().split("T")[0]
                 : ""}
             </span>
             <p className="banner_description">
               {truncate(movie.overview, 150)}
             </p>
           </div>
-          {/* <div className="fade"></div> */}
         </div>
       </header>
-      {trailerUrl && <YouTube videoId={trailerUrl} opts={opts}/>}
+      {trailerUrl && <YouTube videoId={trailerUrl} opts={opts} />}
     </div>
   );
 };

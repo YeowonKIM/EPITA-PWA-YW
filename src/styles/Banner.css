@@ -51,3 +51,41 @@
   font-size: 14px;
   margin-top: 10px;
 }
+
+/* Skeleton 공통 스타일 */
+.skeleton {
+  background-color: #444;
+  border-radius: 4px;
+  margin: 8px 0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-title {
+  width: 40%;
+  height: 32px;
+}
+
+.skeleton-button {
+  width: 80px;
+  height: 30px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.skeleton-text {
+  width: 60%;
+  height: 16px;
+}
+
+/* Skeleton 애니메이션 */
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}

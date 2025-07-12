@@ -53,3 +53,25 @@
   background-color: red;
   height: 20px;
 }
+
+.nav_card {
+  background-color: #111;
+  padding: 8px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: inline-block;
+  margin-right: 12px;
+  transition: transform 0.2s ease;
+}
+
+.nav_card:hover {
+  transform: scale(1.05);
+}
+
+.nav_logo,
+.nav_avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 6px;
+}
